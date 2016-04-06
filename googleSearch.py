@@ -60,11 +60,11 @@ def main():
 		reStructure.reStructure()
 	print "done with loop"
 	if(samples % 2 == 1):
-		File = json.load( open(files[samples - 1]) )
+		file = json.load( open(files[samples - 1]) )
 		queryUnion = aggrgateQueries(File["event"])
 		queryUnion += queryUnion
 		personality = insights( queryUnion )
-		writePersonality( personality, File )
+		writePersonality( personality, file )
 		reStructure.reStructure()
 
 

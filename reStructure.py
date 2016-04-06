@@ -1,5 +1,6 @@
 import json
 import glob
+import numpy as np
 import matplotlib.pyplot as plt
 
 def getTrait(data, name):
@@ -26,9 +27,9 @@ def getTraitLst(data):
 def pretty(obj):
     return json.dumps(obj, sort_keys=True, indent=2) 
 
-personaArry = []
-selections = []
-possibleTraits = ['Adventurousness', 'Artistic interests', 'Emotionality', 'Imagination', 'Intellect', 'Liberalism', 
+global personaArry = []
+global selections = []
+global possibleTraits = ['Adventurousness', 'Artistic interests', 'Emotionality', 'Imagination', 'Intellect', 'Liberalism', 
 					'Achievement striving', 'Cautiousness', 'Dutifulness', 'Orderliness', 'Self-discipline',
 					 'Self-efficacy', 'Activity level', 'Assertiveness', 'Cheerfulness', 'Excitement-seeking', 
 					 'Friendliness', 'Gregariousness', 'Altruism', 'Cooperation', 'Modesty', 'Morality', 
@@ -48,12 +49,12 @@ def process(file):
 	selectedTraits = []
 
 	for trait in selections:
-		response =  getTrait(data, trait)
-		selectedTraits.append( response )
+		call =  getTrait(data, trait)
+		selectedTraits.append( call )
 
 	#fileDate =  file.split("/")[2].split(".")[0]
 	fileDate =  file.split(".")[0]
-
+	print fileDate
 	# Stores selected traits
 	temp = [{'date': fileDate}]
 	for trait in selectedTraits:
@@ -94,9 +95,11 @@ def collect():
 	while( i < 6 and "done" not in response.lower()):
 		response = raw_input("Trait " + str(i) + ">>>  ").lower().title()
 		if( response.isdigit() ):
-			response = possibleTraits[int(response)]
+			selectedTrait = possibleTraits[int(response)]
+			response = selectedTrait
+			print selectedTrait
 
-		if response != "done":
+		if response.lower() != "done":
 			selections.append(response)
 			i = i + 1
 
@@ -104,41 +107,42 @@ def graph():
 	### Graphs selected traits
 	traitArry = {}
 	dates = []
-	for trait in personaArry[1:]:
-
+	
+	for trait in personaArry:
 		# Collects dates
 		dates.append(trait[0]['date'])
 
 		# Compiles each trait's percentage
 		for t in trait[1:]:
+			print t
 			if t['name'] not in traitArry:
 				traitArry[t['name']] = []
 			traitArry[t['name']].append(t['percentage'])
 
-	# Y axis
-	axes = plt.gca()
-	axes.set_ylim([0,1])
 	plt.ylabel("Percentile")
-
+	num = 0
+	
 	for trait in traitArry.keys():
-		plt.plot(range(len(personaArry) - 1), traitArry[trait], label=trait)
+		num = len(traitArry[trait])
+		plt.plot(traitArry[trait], label=trait)
+
+	plt.axis([0, num - 1, 0, 1])
 
 	# Add the legend with some customizations.
-	fig, ax = plt.subplots()
-	legend = ax.legend(loc='best', shadow=True)
+	plt.legend(loc='upper left')
 
-	# The frame is matplotlib.patches.Rectangle instance surrounding the legend.
-	frame = legend.get_frame()
-	frame.set_facecolor('0.90')
-
-	labels = [item.get_text() for item in ax.get_xticklabels()]
-	labels[0] = ""
-
-	for i in range(1, len(dates)):
+	#labels = [item.get_text() for item in ax.get_xticklabels()]
+	#labels[0] = ""
+	
+	dateLabel = []
+	for i in range(len(dates) ):
+		#print labels[i]
 		date = dates[i].split(" ")
-		labels[i] = date[len(date) - 2][0:3] + " '" + date[len(date) - 1][2:4]	
+		dateLabel.append(date[len(date) - 2][0:3] + " '" + date[len(date) - 1][2:4])
 
-	ax.set_xticklabels(labels)
+	plt.xticks(range(len(dates)), dateLabel)
+
+	#ax.set_xticklabels(labels)
 	plt.show()
 
 def reStructure():
