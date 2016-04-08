@@ -1,4 +1,5 @@
 Search Alchemy uses IBM's Alchemy API to analyze Google Search Query histories. 
+V. 1.1
 
 Search Alchemy was created by Michael Fernandes  as a side project in the winter of 2016. With the end result, I hope to contribute to a conversation about cognitive analytics and in particular personality and of course provide a fun tool for curious web enthusiasit. 
 
