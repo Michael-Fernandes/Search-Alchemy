@@ -24,8 +24,6 @@ def getTraitLst(data):
 
 	return possiblePersonas
 
-def pretty(obj):
-    return json.dumps(obj, sort_keys=True, indent=2) 
 
 global personaArry = []
 global selections = []
@@ -37,7 +35,7 @@ global possibleTraits = ['Adventurousness', 'Artistic interests', 'Emotionality'
 					 'Vulnerability']
 
 def process(file):
-	### In: ALchemy insghts json file name
+	### In: ALchemy insights json file name
 	### Processes files to obtain user inputed traits
 	# Opens current file
 	persona = json.load( open(file, "r") )
@@ -79,11 +77,11 @@ def writeFile():
 	fOut.close()
 
 def collect():
-	### Allows user to select desired traits 
+	### Allows User to select desired traits 
 	i = 1
-	for trait in possibleTraits:		#Allows user to see types of traits that can be 
+	for trait in possibleTraits:		# Allows User to see types of traits that can be 
 
-		print  str(i) + ". " + str(trait)
+		print  str(i) + ".\t " + str(trait)
 		i = i + 1
 
 	print "\nEnter 1 - 5 traits by typing the name or number of a trait that you would like to know more about. "
@@ -95,7 +93,7 @@ def collect():
 	while( i < 6 and "done" not in response.lower()):
 		response = raw_input("Trait " + str(i) + ">>>  ").lower().title()
 		if( response.isdigit() ):
-			selectedTrait = possibleTraits[int(response)]
+			selectedTrait = possibleTraits[int(response) - 1]
 			response = selectedTrait
 			print selectedTrait
 
@@ -119,40 +117,43 @@ def graph():
 				traitArry[t['name']] = []
 			traitArry[t['name']].append(t['percentage'])
 
-	plt.ylabel("Percentile")
-	num = 0
 	
+	
+	#Add each seleced trait to legend
+	num = 0
 	for trait in traitArry.keys():
-		num = len(traitArry[trait])
+		num = len(traitArry[trait]) 
 		plt.plot(traitArry[trait], label=trait)
+
 
 	plt.axis([0, num - 1, 0, 1])
 
 	# Add the legend with some customizations.
 	plt.legend(loc='upper left')
-
-	#labels = [item.get_text() for item in ax.get_xticklabels()]
-	#labels[0] = ""
 	
+	#Add time labels to x axis
 	dateLabel = []
 	for i in range(len(dates) ):
-		#print labels[i]
 		date = dates[i].split(" ")
 		dateLabel.append(date[len(date) - 2][0:3] + " '" + date[len(date) - 1][2:4])
 
 	plt.xticks(range(len(dates)), dateLabel)
+	plt.ylabel("Percentile")
 
-	#ax.set_xticklabels(labels)
+	
 	plt.show()
 
 def reStructure():
 	cont = ""
 	while(cont != "n"):
+
 		collect()
 		fileProcess()
 		writeFile()
 		graph()
-		cont = raw_input("Would you like to create another graph y/n?")
+		#Global variables need tweaking
+		cont = "n"
+		#cont = raw_input("Would you like to create another graph y/n?")
 
 if __name__ == "__main__": reStructure()
 
