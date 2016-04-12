@@ -63,7 +63,7 @@ def process(file):
 
 def fileProcess():
 	###Processes all insight file
-	files = glob.glob("Searches/Personas/*.txt")
+	files = glob.glob("googleSearch/SearchesSearches/Personas/*.txt")
 	print files
 	for f in files:
 		process(f)

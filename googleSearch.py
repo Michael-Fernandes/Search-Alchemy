@@ -11,13 +11,9 @@ from os.path import join, dirname
 from watson_developer_cloud import PersonalityInsightsV2
 
 
-##Input Username and Password from bluemix here.
-Username ='b6753ab2-06c5-4909-9d09-c30f337c01e4'
-Password ='HgfSOh2eJhfA'
-
-
-def pretty(obj):
-    return json.dumps(obj, sort_keys=True, indent=2) 
+### ********* Input Username and Password from bluemix here. **************
+Username = ''
+Password = ''
 
 def insights(aggr):
 	personality_insights = PersonalityInsightsV2(
@@ -30,7 +26,7 @@ def insights(aggr):
 
 
 def writePersonality(personality, f):
-	fOut = open("Searches/Personas/" + f.split("/")[1] + ".txt", 'w')
+	fOut = open("googleSearch/Searches/Searches/Personas/" + f.split("/")[1] + ".txt", 'w')
 	json.dump(personality, fOut)
 	fOut.close()
 
@@ -58,7 +54,7 @@ def main():
 		personality = insights( queryUnion )
 		writePersonality( personality, files[i] )
 		reStructure.reStructure()
-	print "done with loop"
+
 	if(samples % 2 == 1):
 		file = json.load( open(files[samples - 1]) )
 		queryUnion = aggrgateQueries(File["event"])
@@ -66,6 +62,7 @@ def main():
 		personality = insights( queryUnion )
 		writePersonality( personality, file )
 		reStructure.reStructure()
+	print "Files are done"
 
 
 def temp():
