@@ -30,13 +30,4 @@ The files included in this respository use [Google User Data](https://history.go
 Note: The Alchemy API allows up to 200 free calls a month. This should be fine for 3-4 user's data.
 
 
-Questions: Contact Michael at m.fern93@gmail.com
-
-
-
-
-
-
-
-
-Contact Michael: m.fern93@gmail.com
+Like what you see or whant to find out more? Contact Michael at m.fern93@gmail.com
