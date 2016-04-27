@@ -1,32 +1,48 @@
+""" ************************************************************************************************ '''
+	The following allows an User to select traits and visualize how there google searches changed
+    overtime based on those traits
+
+    Note: Place this file in the same folder as searchAlchemy. For the script to run properly the file 
+    structure must look as follows:
+    	Current Directory> Google Searches/Searches/Searches/Personas
+    	   ^
+      	   Contains Google Search extraction folder
+'''	************************************************************************************************ """
+
 import json
 import glob
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def getTrait(data, name):
 	### input: An Alchemy insight json obj, name of a personality trait(i.e. "intellect")
 	### Returns the data for a given trait
-	for pType in data:
-		for personality in pType['children']:
-			for pTrait in personality['children']:
+	for personalityType in data:
+		for personality in personalityType['children']:
+			for personalityTrait in personality['children']:
 				
-				if(pTrait['id'] == name):
-					return pTrait
+				if(personalityTrait['id'] == name):
+					return personalityTrait
+
 
 def getTraitLst(data):
+	"""Gets list of all personality traits """
 	possiblePersonas = []
-	for pType in data:
-		for personality in pType['children']:
-			for pTrait in personality['children']:
-				
-				if(pTrait['id'] not in possiblePersonas):
-					possiblePersonas.append( str(pTrait['id']) )
 
+	for personalityType in data:
+		for personality in personalityType['children']:
+			for personalityTrait in personality['children']:
+				
+				if(personalityTrait['id'] not in possiblePersonas):
+					possiblePersonas.append( str(personalityTrait['id']) )
 	return possiblePersonas
 
 
 global personaArry = []
 global selections = []
+
+#Possible traits an user can select from
 global possibleTraits = ['Adventurousness', 'Artistic interests', 'Emotionality', 'Imagination', 'Intellect', 'Liberalism', 
 					'Achievement striving', 'Cautiousness', 'Dutifulness', 'Orderliness', 'Self-discipline',
 					 'Self-efficacy', 'Activity level', 'Assertiveness', 'Cheerfulness', 'Excitement-seeking', 
@@ -34,25 +50,23 @@ global possibleTraits = ['Adventurousness', 'Artistic interests', 'Emotionality'
 					 'Sympathy', 'Trust', 'Anger', 'Anxiety', 'Depression', 'Immoderation', 'Self-consciousness', 
 					 'Vulnerability']
 
+
 def process(file):
 	### In: ALchemy insights json file name
-	### Processes files to obtain user inputed traits
+	### Obtains selected traits from a passed in personality file
 	# Opens current file
 	persona = json.load( open(file, "r") )
 	fSplit = file.split(".")
 
-	# Prunes json tree
-	data = persona['tree']['children'][0]['children']
+	data = persona['tree']['children'][0]['children'] # Prunes json tree
 
 	selectedTraits = []
-
 	for trait in selections:
 		call =  getTrait(data, trait)
 		selectedTraits.append( call )
 
-	#fileDate =  file.split("/")[2].split(".")[0]
-	fileDate =  file.split(".")[0]
-	print fileDate
+	fileDate =  file.split(".")[0] # Saves end date for particular file's data collection period
+	
 	# Stores selected traits
 	temp = [{'date': fileDate}]
 	for trait in selectedTraits:
@@ -62,7 +76,7 @@ def process(file):
 	
 
 def fileProcess():
-	###Processes all insight file
+	### Processes all insight file for Google Search data set
 	files = glob.glob("googleSearch/SearchesSearches/Personas/*.txt")
 	print files
 	for f in files:
@@ -70,14 +84,15 @@ def fileProcess():
 
 
 def writeFile():	
-	### Writes collected data to file
+	### Stores collected data to file
 	string = "var dataAggr = " + str(personaArry)
 	fOut = open('test.js', 'w');
 	fOut.write(string)
 	fOut.close()
 
+
 def collect():
-	### Allows User to select desired traits 
+	### User selects desired traits 
 	i = 1
 	for trait in possibleTraits:		# Allows User to see types of traits that can be 
 
@@ -90,7 +105,7 @@ def collect():
 	# User selects desired traits 
 	response = ""
 	i = 1
-	while( i < 6 and "done" not in response.lower()):
+	while( i < 6 and "done" not in response.lower()): #User selects trait
 		response = raw_input("Trait " + str(i) + ">>>  ").lower().title()
 		if( response.isdigit() ):
 			selectedTrait = possibleTraits[int(response) - 1]
@@ -100,6 +115,7 @@ def collect():
 		if response.lower() != "done":
 			selections.append(response)
 			i = i + 1
+
 
 def graph():
 	### Graphs selected traits
@@ -116,8 +132,6 @@ def graph():
 			if t['name'] not in traitArry:
 				traitArry[t['name']] = []
 			traitArry[t['name']].append(t['percentage'])
-
-	
 	
 	#Add each seleced trait to legend
 	num = 0
@@ -137,23 +151,21 @@ def graph():
 		date = dates[i].split(" ")
 		dateLabel.append(date[len(date) - 2][0:3] + " '" + date[len(date) - 1][2:4])
 
-	plt.xticks(range(len(dates)), dateLabel)
+	plt.xticks(range(len(dates)), dateLabel) # Labels axis
 	plt.ylabel("Percentile")
 
-	
-	plt.show()
+	plt.show() # Plots graph
+
 
 def reStructure():
 	cont = ""
 	while(cont != "n"):
-
 		collect()
 		fileProcess()
 		writeFile()
 		graph()
-		#Global variables need tweaking
 		cont = "n"
-		#cont = raw_input("Would you like to create another graph y/n?")
+
 
 if __name__ == "__main__": reStructure()
 
