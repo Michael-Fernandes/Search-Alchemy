@@ -21,7 +21,6 @@ def getTrait(data, name):
 	for personalityType in data:
 		for personality in personalityType['children']:
 			for personalityTrait in personality['children']:
-				
 				if(personalityTrait['id'] == name):
 					return personalityTrait
 
@@ -38,12 +37,11 @@ def getTraitLst(data):
 					possiblePersonas.append( str(personalityTrait['id']) )
 	return possiblePersonas
 
-
-global personaArry = []
-global selections = []
+personaArry = []
+selections = []
 
 #Possible traits an user can select from
-global possibleTraits = ['Adventurousness', 'Artistic interests', 'Emotionality', 'Imagination', 'Intellect', 'Liberalism', 
+possibleTraits = ['Adventurousness', 'Artistic interests', 'Emotionality', 'Imagination', 'Intellect', 'Liberalism', 
 					'Achievement striving', 'Cautiousness', 'Dutifulness', 'Orderliness', 'Self-discipline',
 					 'Self-efficacy', 'Activity level', 'Assertiveness', 'Cheerfulness', 'Excitement-seeking', 
 					 'Friendliness', 'Gregariousness', 'Altruism', 'Cooperation', 'Modesty', 'Morality', 
@@ -52,8 +50,8 @@ global possibleTraits = ['Adventurousness', 'Artistic interests', 'Emotionality'
 
 
 def process(file):
-	### In: ALchemy insights json file name
-	### Obtains selected traits from a passed in personality file
+	""" In: Alchemy insights json file name
+	 	Obtains selected traits from a passed in personality file """
 	# Opens current file
 	persona = json.load( open(file, "r") )
 	fSplit = file.split(".")
@@ -76,23 +74,28 @@ def process(file):
 	
 
 def fileProcess():
-	### Processes all insight file for Google Search data set
-	files = glob.glob("googleSearch/SearchesSearches/Personas/*.txt")
-	print files
+	""" Processes all insight file for Google Search data set """
+	files = glob.glob("personalities/*.txt")
 	for f in files:
 		process(f)
 
 
 def writeFile():	
-	### Stores collected data to file
-	string = "var dataAggr = " + str(personaArry)
-	fOut = open('test.js', 'w');
+	"""Stores collected data to file """
+	string = "var dataAggr = ["
+	fOut = open('test.js', 'w')
+
 	fOut.write(string)
+
+	for entry in personaArry:
+		fOut.write("[" + repr(entry[1]["percentage"]) + "," + repr(entry[0]["date"][14:24]) + "],")
+
+	fOut.write("]")
 	fOut.close()
 
 
 def collect():
-	### User selects desired traits 
+	""" User selects desired traits""" 
 	i = 1
 	for trait in possibleTraits:		# Allows User to see types of traits that can be 
 
@@ -139,7 +142,6 @@ def graph():
 		num = len(traitArry[trait]) 
 		plt.plot(traitArry[trait], label=trait)
 
-
 	plt.axis([0, num - 1, 0, 1])
 
 	# Add the legend with some customizations.
@@ -156,16 +158,15 @@ def graph():
 
 	plt.show() # Plots graph
 
-
 def reStructure():
 	cont = ""
+	"this will be an error"
 	while(cont != "n"):
 		collect()
 		fileProcess()
 		writeFile()
 		graph()
-		cont = "n"
-
+		cont = raw_input("Trait " + str(i) + ">>>  ").lower().title()
 
 if __name__ == "__main__": reStructure()
 

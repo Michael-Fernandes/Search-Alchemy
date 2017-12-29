@@ -1,9 +1,9 @@
 import json
 import glob
-import sys;
+import sys
 import reStructure
 import datetime
-reload(sys);
+reload(sys)
 sys.setdefaultencoding("utf8")
 
 import json
@@ -12,8 +12,8 @@ from watson_developer_cloud import PersonalityInsightsV2
 
 
 ### ********* Input Username and Password from bluemix here. **************
-Username = ''
-Password = ''
+Username = '28f9b46e-6391-4bf0-a746-bcb93f6ddd0d'
+Password = '2DFGd8cgXPiu'
 
 def insights(aggr):
 	personality_insights = PersonalityInsightsV2(
@@ -26,7 +26,7 @@ def insights(aggr):
 
 
 def writePersonality(personality, f):
-	fOut = open("googleSearch/Searches/Searches/Personas/" + f.split("/")[1] + ".txt", 'w')
+	fOut = open("personalities/" + f.split("/")[1] + ".txt", 'w')
 	json.dump(personality, fOut)
 	fOut.close()
 
@@ -37,23 +37,22 @@ def aggrgateQueries(dic):
 		queryUnion += " " + dic[i]["query"]['query_text']
 	return queryUnion
 
+
 def main():
 	print "running \n\n"
 	files = glob.glob("Searches/*.json")
-	halfFile = files[0].split()[0].split("/")[1]
-	print halfFile
-    
+	#halfFile = files[0].split()[0].split("/")[1]
+	#print halfFile
 	files.sort(key=lambda x: datetime.datetime.strptime( x.split()[0].split("/")[1], '%Y-%m-%d'))
 	samples = len(files)
-	
 	for i in range(0, samples, 2):
 		file1 = json.load( open(files[i]) )
 		file2 = json.load( open(files[i + 1]) )
-
+		
 		queryUnion = aggrgateQueries( file1["event"] ) + aggrgateQueries( file2["event"] )
 		personality = insights( queryUnion )
 		writePersonality( personality, files[i] )
-		reStructure.reStructure()
+		#reStructure.reStructure()
 
 	if(samples % 2 == 1):
 		file = json.load( open(files[samples - 1]) )
@@ -61,7 +60,7 @@ def main():
 		queryUnion += queryUnion
 		personality = insights( queryUnion )
 		writePersonality( personality, file )
-		reStructure.reStructure()
+		#reStructure.reStructure()
 	print "Files are done"
 
 
@@ -73,7 +72,7 @@ def temp():
 		queryUnion = aggrgateQueries( recent["event"] )
 		personality = insights( queryUnion )
 		writePersonality( personality, file )
-		reStructure.reStructure()
+	reStructure.reStructure()
 
 
 ##Runs program 
