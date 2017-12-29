@@ -1,0 +1,135 @@
+<doctype !html>
+<html>
+<head>
+    
+</head>
+<body>
+
+</body>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+
+<script>
+var	margin = {top: 30, right: 40, bottom: 30, left: 50},
+width = 600 - margin.left - margin.right,
+height = 270 - margin.top - margin.bottom;
+
+var svg = d3.select("body").append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom)
+                           .append("g")
+                            .attr("transform",
+                                "translate(" + margin.left + "," + margin.top + ")");
+
+var parseDate = d3.utcParse("%Y-%m-%d");
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+var xAxis = d3.axisBottom()
+                .scale(x);
+
+var yAxis = d3.axisLeft()
+                .scale(y);
+
+var lines = []
+
+var traits = ["Adventurousness", "Artistry", "Emotionality", "Imagination", "Curiosity", "Openess"];
+
+var colors = ["orange", "blue", "red", "green", "teal", "grey", "black"]
+
+for(var i = 0; i < traits.length; i++){
+    var t = traits[i];
+    lines.push({
+        "line": function(){ 
+            var l = d3.line().curve(d3.curveMonotoneX)
+                        .x(function(d) { 
+                            console.log(d);
+                            return x(d.date); })
+                        .y(function(d) { return y(d[t]); })
+            return l
+            }, 
+        "color": colors[i]
+    });
+}
+
+/*
+// define the 1st line
+var valueline = d3.line()
+                    .curve(d3.curveMonotoneX)
+                    .x(function(d) {  return x(d.date); })
+                    .y(function(d) { return y(d.Adventurousness); });
+*/
+// define the 2nd line
+var valueline2 = d3.line()
+                    .curve(d3.curveMonotoneX)
+                    .x(function(d) { 
+                        return x(d.date); })
+                    .y(function(d) { return y(d.Artistry); });
+    
+d3.csv("combined.csv", function(error, data){
+    if (error) throw error;
+
+    data.forEach(function(d){
+        d.date = parseDate(d.date);
+        d.Adventurousness = +d.Adventurousness;
+        d.Artistry = +d.Artistry;
+        d.Emotionality = +d.Emotionality;
+        d.Imagination = +d.Imagination;
+        d.Curiosity = +d.Curiosity;
+        d.Openess = +d.Openess;
+    });
+
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([0, 1]);
+
+    /*
+    svg.append("path")		// Add the valueline path.
+    .attr("class", "line")
+    .style("fill", "none")
+    .style("stroke", "blue")
+    .attr("d", valueline(data));
+ */
+    svg.append("path")		// Add the valueline2 path.
+        .attr("class", "line")
+        .style("stroke", "red")
+        .style("fill", "none")
+        .attr("d", valueline2(data));
+    console.log(valueline2(data));
+
+  lines.forEach(function(line, i){
+        svg.append("path")		// Add the valueline2 path.
+            .attr("class", "line")
+            .style("stroke", lines.color)
+            .style("fill", "none")
+            .attr("d", line[0](data) );
+    });  
+
+  /*  for(var j = 0; j < lines.length; j++){
+        svg.append("path")		// Add the valueline2 path.
+            .attr("class", "line")
+            .style("stroke", lines[j].color )
+            .style("fill", "none")
+            .attr("d", lines[j].line(data) ); 
+    } */
+
+    svg.append("g")			// Add the X Axis
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")			// Add the Y Axis
+        .attr("class", "y axis")
+        .call(yAxis);
+
+})
+
+
+</script>
+
+
+</html>
+</doctype>
