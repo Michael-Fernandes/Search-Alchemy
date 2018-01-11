@@ -1,9 +1,9 @@
-# Search Alchemy a new way to know what your concious
+# Search Alchemy: Your Searches Over Time 
 
 Search Alchemy uses [IBM's Alchemy API](https://console.ng.bluemix.net/catalog/services/alchemyapi "Alchemy API")  to analyze [Google User Search Queries](https://history.google.com/history/?utm_source=help "Download Google User Search Data").
-V. 1.1
+V. 1.2
 
-Ever catch yourself google an obscurely urgent topic, "How to peel a frozen banana?". Or maybe you've gone through a brief fascination with the latest dance trend, "How do you whip? and why do you nay nay?". Undoubtedly what we Google(or Bing if you are into that type of thing) is reflective of who we are, at least at that moment. Like us, what we google changes. Search Alchemy is a project that seeks to examine the relationship of what we google and who we are.
+Ever catch yourself google an obscurely urgent topic, "How to peel a frozen banana?". Or maybe you've gone through a brief fascination with the latest dance trend, "How do you whip? and why do you nay nay?". Undoubtedly what we search is reflective of who we are, at least at that moment. Like us, what we Google changes. 
 
 Search Alchemy creates personality insights from Google User Search Data, by providing visualizations of the type of sentiments included in Google Searches and how those searches change over time.
 
@@ -30,4 +30,4 @@ The files included in this respository use [Google User Data](https://history.go
 Note: The Alchemy API allows up to 200 free calls a month. This should be fine for 3-4 user's data.
 
 
-Like what you see or whant to find out more? Contact Michael at m.fern93@gmail.com
+Like what you see or want to find out more? Contact Michael at mfern93@gmail.com
